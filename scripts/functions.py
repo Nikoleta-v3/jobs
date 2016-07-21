@@ -5,13 +5,11 @@ import random
 import pandas as pd
 import numpy as np
 
-
-
 def Neighbors(G):
     """
     Returns a list with the neighbors of a player. By neighbors
     we mean the players a player interacts with.
-    """
+    """cd
     Neighbors = []
     for i in range(len(G.nodes())) :
         Neighbors.append(G.neighbors(i))

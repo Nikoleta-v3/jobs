@@ -14,14 +14,14 @@ repetitions = 5
 players = random.sample([s() for s in axl.ordinary_strategies], 10)
 
 # where to export
-write_out = '/home/nikoleta/src/jobs/data/Lattice.csv'
+write_out = '/home/c1569433/src/jobs/data/Lattice.csv'
 
 results = pd.DataFrame()
 for seed in range(0, 100):
 
     np.random.seed(seed)
     p = seed/100
-    filename = '/home/nikoleta/src/jobs/data/Lattice-{}.csv'.format(seed)
+    filename = '/home/c1569433/src/jobs/data/Lattice-{}.csv'.format(seed)
     # define the graph
     G = nx.newman_watts_strogatz_graph(len(players), 4, p)
     edges = G.edges()
