@@ -17,13 +17,13 @@ ordinary_players = [s() for s in axl.ordinary_strategies]
 write_out = '/home/c1569433/src/jobs/data/Tests/Lattice.csv'
 
 results = pd.DataFrame()
-for seed in range(0, 1):
+for seed in range(0, 100):
 
     np.random.seed(seed)
 
     # define the graph
-    players = random.sample(ordinary_players, 5)
-    for p in range(0, 5) :
+    players = random.sample(ordinary_players, 100)
+    for p in range(0, 100) :
         # shuffle the players list
         random.shuffle(players, random.random)
 
