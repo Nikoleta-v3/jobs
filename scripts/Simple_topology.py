@@ -10,20 +10,20 @@ from data_structure import *
 
 # parameters
 turns = 200
-repetitions = 100
+repetitions = 5
 ordinary_players = [s() for s in axl.ordinary_strategies]
 
 # where to export
-write_out = '/home/c1569433/src/jobs/data/Cycle.csv'
+write_out = '/home/nikoleta/src/jobs/data/Cycle.csv'
 
 results = pd.DataFrame()
-for seed in range(0, 100):
+for seed in range(0, 1):
 
     np.random.seed(seed)
 
     # define the graph
-    players = random.sample(ordinary_players, 100)
-    for p in range(0, 100) :
+    players = random.sample(ordinary_players, 5)
+    for p in range(0, 5) :
         # shuffle the players list
         random.shuffle(players, random.random)
 
@@ -33,7 +33,7 @@ for seed in range(0, 100):
 
         edges = G.edges()
 
-        filename = '/home/c1569433/src/jobs/data/Cycle-{}-{}.csv'.format(seed, p)
+        filename = '/home/nikoleta/src/jobs/data/Cycle-{}-{}.csv'.format(seed, p)
         # in file name the first number is the seed the second in which
         # shuffle
         results = results.append([tournament_results(G, seed, p, players, turns,
