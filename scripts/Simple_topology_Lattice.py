@@ -14,7 +14,7 @@ repetitions = 100
 ordinary_players = [s() for s in axl.ordinary_strategies]
 
 # where to export
-write_out = '/home/c1569433/src/jobs/data/Tests/Lattice.csv'
+write_out = '/home/nikoleta/src/jobs/Lattice.csv'
 
 results = pd.DataFrame()
 for seed in range(0, 100):
@@ -23,7 +23,7 @@ for seed in range(0, 100):
 
     # define the graph
     players = random.sample(ordinary_players, 100)
-    for p in range(0, 100) :
+    for p in range(0, 50) :
         # shuffle the players list
         random.shuffle(players, random.random)
 
@@ -32,11 +32,10 @@ for seed in range(0, 100):
 
         edges = G.edges()
 
-        filename = '/home/c1569433/src/jobs/data/Tests/Lattice-{}-{}.csv'.format(seed, p)
+        filename = '/home/nikoleta/src/jobs/Lattice-{}-{}.csv'.format(seed, p)
         # in file name the first number is the seed the second in which
         # shuffle
         results = results.append([tournament_results(G, seed, p, players, turns,
                                edges, repetitions, filename)])
 
-results = results[cols]
-results.to_csv(write_out, index=False)
+        results.to_csv(write_out, mode='a',  index=False)
