@@ -10,7 +10,9 @@
 
 #PROJECT=PR350
 
+alias python='~/anaconda3/bin/python'
+
 export MPLBACKEND="agg"
 # Run a spatial tournament with a newman watts strogatz topology
-/home/c1569433/src/jobs/script
+cd /home/c1569433/src/jobs/script
 python lattice.py
