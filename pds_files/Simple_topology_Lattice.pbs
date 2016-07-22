@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -q workq
-#PBS -N cycle_shuffling_players_tournament
+#PBS -N lattice_shuffling_players_tournament
 #PBS -P PR350
 #PBS -o /home/c1569433/src/jobs/stdout.txt
 #PBS -e /home/c1569433/src/jobs/stderr.txt
