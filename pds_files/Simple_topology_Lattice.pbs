@@ -2,8 +2,8 @@
 #PBS -q workq
 #PBS -N lattice_shuffling_players_tournament
 #PBS -P PR350
-#PBS -o /home/c1569433/src/jobs/Lattice/stdout.txt
-#PBS -e /home/c1569433/src/jobs/Lattice/stderr.txt
+#PBS -o /home/c1569433/src/jobs/data/Lattice/stdout.txt
+#PBS -e /home/c1569433/src/jobs/data/Lattice/stderr.txt
 #PBS -l select=1:ncpus=16:mpiprocs=16
 #PBS -l place=scatter:excl
 #PBS -l walltime=70:00:00
@@ -11,6 +11,6 @@
 #PROJECT=PR350
 
 export MPLBACKEND="agg"
-# Run a spatial tournament with a lattice topoogy - 5 random players.
+# Run a spatial tournament with a lattice topoogy - 50 random players.
 cd /home/c1569433/src/jobs/scripts
 ~/anaconda3/bin/python Simple_topology_Lattice.py

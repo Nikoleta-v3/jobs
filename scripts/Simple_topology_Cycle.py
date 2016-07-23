@@ -10,7 +10,7 @@ from data_structure import *
 
 # parameters
 turns = 200
-repetitions = 5
+repetitions = 100
 ordinary_players = [s() for s in axl.ordinary_strategies]
 
 # where to export
