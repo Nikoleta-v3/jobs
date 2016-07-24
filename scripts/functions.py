@@ -55,7 +55,7 @@ def Cliques(G) :
     return cliques
 
 def touranment(G, seed, players,
-               turns, edges, repetitions, filename):
+               turns, edges, repetitions): # filename)
     """
     Run a spatial tournament with a topology of any given
     graph. Return the results.
@@ -72,10 +72,10 @@ def touranment(G, seed, players,
                                        repetitions= repetitions)
 
     # play the tournament. Return the results.
-    return tournament.play(processes=0, filename=filename)
+    return tournament.play() # filename=filename)
 
 def tournament_results(G, seed, p, players,
-               turns, edges, repetitions, filename):
+               turns, edges, repetitions): #filename)
     """
     Creates a data frame with parameters of the tournament.
 
@@ -99,7 +99,7 @@ def tournament_results(G, seed, p, players,
     """
     # generate the tournament and the results
     results = touranment(G, seed, players, turns, edges,
-                         repetitions, filename)
+                         repetitions) # filename)
 
     # parameters
     neighborhood = Neighbors(G)

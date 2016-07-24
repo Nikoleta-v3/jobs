@@ -32,10 +32,10 @@ for seed in range(0, 100):
 
         edges = G.edges()
 
-        filename = '/home/c1569433/src/jobs/data/Lattice/5_Players/Lattice-{}-{}.csv'.format(seed, p)
+        #filename = '/home/c1569433/src/jobs/data/Lattice/5_Players/Lattice-{}-{}.csv'.format(seed, p)
         # in file name the first number is the seed the second in which
         # shuffle
         results = results.append([tournament_results(G, seed, p, players, turns,
-                               edges, repetitions, filename)])
+                               edges, repetitions)]) #filename
 
         results.to_csv(write_out, mode='a',  index=False)
