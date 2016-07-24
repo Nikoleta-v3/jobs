@@ -40,4 +40,4 @@ for seed in range(0, 100):
                                edges, repetitions, filename)])
 
 
-        results.to_csv(write_out, index=False)
+        results.to_csv(write_out, mode='a' , index=False)
