@@ -5,14 +5,14 @@ import random
 import pandas as pd
 import numpy as np
 
-def Neighbors(G):
+def Neighbors(G, players):
     """
     Returns a list with the neighbors of a player. By neighbors
     we mean the players a player interacts with.
     """
     Neighbors = []
-    for i in range(len(G.nodes())) :
-        Neighbors.append(G.neighbors(i))
+    for i in range(len(players)) :
+        Neighbors.append(tuple(players[j] for j in G.neighbors(i)))
     return Neighbors
 
 def Neighborhood_size (Neighborhood) :
@@ -102,7 +102,7 @@ def tournament_results(G, seed, p, players,
                          repetitions) # filename)
 
     # parameters
-    neighborhood = Neighbors(G)
+    neighborhood = Neighbors(G, players)
     nsize = Neighborhood_size(neighborhood)
     degree = list(G.degree(G.nodes()).values())
     nscores = Neighbors_Scores(G, results, players)
