@@ -10,7 +10,6 @@ import os.path
 from functions import *
 from data_structure import *
 
-import csv
 # parameters
 turns = 200
 repetitions = 10
@@ -18,7 +17,7 @@ ordinary_players = [s() for s in axl.ordinary_strategies]
 num_players = 5
 
 # where to export
-write_out = '/scratch/c1569433/data/Lattice_{}_players.csv'.format(num_players)
+write_out = '/scratch/c1569433/data/Circle_{}_players.csv'.format(num_players)
 file_exists = os.path.isfile(write_out)
 
 results = pd.DataFrame()
@@ -48,3 +47,4 @@ for seed in range(0, 100):
             results.to_csv(write_out, index=False, header=True)
         else :
             results.to_csv(write_out, mode='a',  index=False, header=False)
+        
