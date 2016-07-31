@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -q workq
+#PBS -N simple_round_robin_tournament
+#PBS -P PR350
+#PBS -o stdout.txt
+#PBS -e stderr.txt
+#PBS -l select=1:ncpus=16:mpiprocs=16
+#PBS -l place=scatter:excl
+#PBS -l walltime=10:00:00
+
+#PROJECT=PR350
+
+export MPLBACKEND="agg"
+# Run a round robin tournament and keep cooperating rating
+cd /home/c1569433/src/jobs/scripts
+~/anaconda3/bin/python Cooperating_ratio.py
