@@ -27,7 +27,7 @@ for i in range (2) :
     experiment = 'watts_strogatz_graph'
 
     # where to export
-    write_out = '/scratch/c1569433/Desktop/{}_{}.h5'.format(experiment, num_neighbors)
+    write_out = '/scratch/c1569433/data/{}_{}.h5'.format(experiment, num_neighbors)
     file_exists = os.path.isfile(write_out)
 
     results = pd.DataFrame()
