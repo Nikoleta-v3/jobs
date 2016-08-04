@@ -32,6 +32,14 @@ def Neighbors_Scores(G, results, players):
     return [[results.scores[j] for j in G.neighbors(i)]
             for i, pl in enumerate(players)]
 
+def Neighbors_Normalized_Scores(G, results, players):
+    """
+    Returns a list with the normalized scores of the
+    neighbors.
+    """
+    return [[results.normalised_scores[j] for j in G.neighbors(i)]
+            for i, pl in enumerate(players)]
+
 def Average_Neighborhood_Score(G, results) :
     """
     Returns the average score of the sum of the neighbors
@@ -40,6 +48,18 @@ def Average_Neighborhood_Score(G, results) :
     av_score = []
     temp = [[j for m in G.neighbors(k)
              for j in results.scores[m]] for k in G.nodes()]
+    for i in G.nodes() :
+        av_score.append(np.mean(temp[i]))
+    return av_score
+
+def Normalised_Average_Neighborhood_Score(G, results):
+    """
+    Returns the average score of the sum of the neighbors
+    scores. Thus, the average score of the neighborhood.
+    """
+    av_score = []
+    temp = [[j for m in G.neighbors(k)
+             for j in results.normalised_scores[m]] for k in G.nodes()]
     for i in G.nodes() :
         av_score.append(np.mean(temp[i]))
     return av_score
@@ -72,10 +92,9 @@ def touranment(G, seed, players,
                                        repetitions= repetitions)
 
     # play the tournament. Return the results.
-    return tournament.play() # filename=filename)
+    return tournament.play()
 
-def tournament_results(G, seed, p, players,
-               turns, edges, repetitions): #filename)
+def tournament_results(G, seed, p, players, turns, edges, repetitions):
     """
     Creates a data frame with parameters of the tournament.
 
@@ -106,28 +125,31 @@ def tournament_results(G, seed, p, players,
     nsize = Neighborhood_size(neighborhood)
     degree = list(G.degree(G.nodes()).values())
     nscores = Neighbors_Scores(G, results, players)
+    normalised_nscore = Neighbors_Normalized_Scores(G, results, players)
+    normalised_av_nscore = Normalised_Average_Neighborhood_Score(G, results)
     av_nscores = Average_Neighborhood_Score(G, results)
     cliques = Cliques(G)
 
-
     # create data frame
     data = pd.DataFrame({'players_list' :
-                          [players for _ in results.players],
+                          str([players for _ in results.players]),
                          'seed' : seed, 'parameter': p ,
                          'player_index' : G.nodes(),
-                         'player_name' : results.players,
+                         'player_name' : str(results.players),
+                         'cooperating_ratio' : results.cooperating_rating,
                          'degree' : degree ,
-                         'neighbors' : neighborhood,
+                         'neighbors' : str(neighborhood),
                          'neighborhood_size' : nsize,
                          'ranking' : results.ranking,
-                         'scores' : results.scores,
+                         'scores' : str(results.scores),
                          'normalised_scores' :
-                          results.normalised_scores,
+                          str(results.normalised_scores),
                          'average_score' :
                           [np.median(scores) for scores in results.normalised_scores],
-                         'neighbors_scores' : nscores,
-                         'average_neighboorhood_score' :
-                          av_nscores,
+                         'neighbors_scores' : str(nscores),
+                         'normalised_neighbors_score' : normalised_nscore,
+                         'normalised_average_neighboorhood_score' :
+                          normalised_av_nscore,
                          'R' :
                           [list(results.game.RPST())[0] for _ in results.players],
                          'P' :
@@ -138,7 +160,7 @@ def tournament_results(G, seed, p, players,
                           [list(results.game.RPST())[3] for _ in results.players],
                          'connectivity' : nx.node_connectivity(G),
                          'clustering' : nx.average_clustering(G),
-                         'cliques' : cliques
+                         'cliques' : str(cliques)
                         })
 
     return data
