@@ -16,7 +16,7 @@ repetitions = 10
 ub_neighborhood_size = 50
 ub_seed = 10
 num_sample_players = 10
-ub_parameter
+ub_parameter = 10
 
 ordinary_players = [s() for s in axl.strategies]
 
