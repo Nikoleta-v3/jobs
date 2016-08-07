@@ -13,49 +13,59 @@ from data_structure import *
 # parameters
 turns = 200
 repetitions = 10
-ordinary_players = [s() for s in axl.ordinary_strategies]
+ub_neighborhood_size = 50
+ub_seed = 10
+num_sample_players = 10
+ub_parameter
 
-for i in range (2) :
-    if i == 0 :
-        num_neighbors = '4'
-        neighbors = 4
-    if i ==1  :
-        num_neighbors = '8'
-        neighbors = 8
+ordinary_players = [s() for s in axl.strategies]
 
-    # Title
-    experiment = 'newman_watts_strogatz'
+# TitleS
+experiment = 'watts_strogatz'
 
-    # where to export
-    write_out = '/scratch/c1569433/data/{}_{}.h5'.format(experiment, num_neighbors)
-    file_exists = os.path.isfile(write_out)
+# where to export
+write_out = '/scratch/c1569433/data/{}.h5'.format(experiment)
+file_exists = os.path.isfile(write_out)
 
-    results = pd.DataFrame()
-    for seed in range(0, 10):
+results = pd.DataFrame()
+for neighborhood_size in range(2, ub_neighborhood_size):
+    for initial_neighbors in range(1, neighborhood_size):
 
         # set seed
-        axl.seed(seed)
+        axl.seed(neighborhood_size)
 
-        num_players = random.randint(2, 132)
-        # define the graph
-        players = random.sample(ordinary_players, num_players)
+        for _ in range (num_sample_players)
+            # create players
+            players = random.sample(ordinary_players, neighborhood_size)
 
-        for parameter in range(0, 101) :
+            for parameter in range(0, ub_parameter) :
+                for seed in range(ub_seed) :
+                    p = parameter/10
 
-            p = parameter/100
-            # Define graph
-            G = nx.newman_watts_strogatz_graph(len(players), 8, p)
+                    axl.seed(seed)
+                    # Define graph
+                    G = nx.watts_strogatz_graph(len(players),
+                                                           initial_neighbors, p)
+                    # check for unconnected nodes
+                    connections = [len(c) for c in
+                                   sorted(nx.connected_components(G), key=len,
+                                                                  reverse=True)]
 
-            edges = G.edges()
 
-            results = results.append([tournament_results(G, seed, p, players, turns,
-                                   edges, repetitions)])
+                    if connections and 1 not in connections:
 
-            results = results[cols]
-
-            if not file_exists:
-                results.to_hdf(write_out, '{}_{}'.format(experiment, num_neighbors),
-                               index=False, header=True)
-            else :
-                results.to_hdf(write_out, '{}_{}'.format(experiment, num_neighbors),
-                               mode='a',  index=False, header=False)
+                            edges = G.edges()
+                            results = results.append([tournament_results(G,
+                                                        seed, p, players, turns,
+                                                           edges, repetitions)])
+                            results = results[cols]
+                            print("game", seed, parameter)
+                            if not file_exists:
+                                results.to_hdf(write_out, '{}'.format(experiment),
+                                               index=False,
+                                               header=True)
+                            else :
+                                results.to_hdf(write_out, '{}'.format(experiment),
+                                               mode='a',  index=False,
+                                               header=False)
+                            success = True

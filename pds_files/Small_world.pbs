@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -q workq
-#PBS -N newman_watts_strogatz_experiment
+#PBS -N small_world_experiment
 #PBS -P PR350
 #PBS -o stdout.txt
 #PBS -e stderr.txt
@@ -11,6 +11,6 @@
 #PROJECT=PR350
 
 export MPLBACKEND="agg"
-# Run a spatial tournament with a Newman Watts Strogatz topology
+# Run a spatial tournament with a small world topology
 cd /home/c1569433/src/jobs/scripts
 ~/anaconda3/bin/python Small_world.py
