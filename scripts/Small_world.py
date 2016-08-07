@@ -34,7 +34,7 @@ for tournament_size in range(2, ub_tournament_size):
         # set seed
         axl.seed(tournament_size)
 
-        for sample_players in range (num_sample_players)
+        for sample_players in range (num_sample_players) :
             # create players
             axl.seed(sample_players)
             players = random.sample(ordinary_players, tournament_size)
@@ -61,7 +61,7 @@ for tournament_size in range(2, ub_tournament_size):
                                                         seed, p, players, turns,
                                                            edges, repetitions)])
                             results = results[cols]
-                            print("game", seed, parameter)
+
                             if not file_exists:
                                 results.to_hdf(write_out, '{}'.format(experiment),
                                                index=False,
