@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -q workq
+#PBS -N sample_data
+#PBS -P PR350
+#PBS -o sample_stdout.txt
+#PBS -e sample_stderr.txt
+#PBS -l select=1:ncpus=16:mpiprocs=16
+#PBS -l place=scatter:excl
+#PBS -l walltime=70:00:00
+
+#PROJECT=PR350
+
+export MPLBACKEND="agg"
+# Sample 20% of the whole data set
+cd /home/c1569433/src/jobs/scripts
+~/anaconda3/bin/python sample.py /scratch/c1569433/data/binomial.h5 /scratch/c1569433/data/binomial_sample.h5
