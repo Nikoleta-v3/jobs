@@ -92,7 +92,7 @@ def touranment(G, seed, players,
                                        repetitions= repetitions)
 
     # play the tournament. Return the results.
-    return tournament.play()
+    return tournament.play(progress_bar=False)
 
 def tournament_results(G, seed, p, players, turns, edges, repetitions):
     """

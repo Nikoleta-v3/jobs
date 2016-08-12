@@ -1,6 +1,7 @@
 import axelrod as axl
 import networkx as nx
 import random
+import tqdm
 
 import pandas as pd
 import numpy as np
@@ -11,11 +12,11 @@ from functions import *
 from data_structure import *
 
 # parameters
-turns = 200
-repetitions = 10
-ub_tournament_size = 6
-ub_seed = 10
-num_sample_players = 10
+turns = 10
+repetitions = 2
+ub_tournament_size = 8
+ub_seed = 6
+num_sample_players = 6
 ub_parameter = 10
 
 ordinary_players = [s() for s in axl.strategies]
@@ -28,7 +29,7 @@ write_out = '/home/nikoleta/Desktop/error_{}.h5'.format(experiment)
 file_exists = os.path.isfile(write_out)
 
 
-for tournament_size in range(2, ub_tournament_size):
+for tournament_size in tqdm.tqdm(range(2, ub_tournament_size)):
     for initial_neighborhood_size in range(1, tournament_size):
 
         # set seed
@@ -57,10 +58,10 @@ for tournament_size in range(2, ub_tournament_size):
                     if connections and 1 not in connections :
                     # Some description of what is going on.
                             edges = G.edges()
-                                
-                            results = pd.DataFrame([tournament_results(G,
+
+                            results = tournament_results(G,
                                                         seed, p, players, turns,
-                                                           edges, repetitions)])
+                                                           edges, repetitions)
                             results = results[cols]
 
                             if not file_exists:
