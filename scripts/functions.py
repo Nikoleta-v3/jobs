@@ -5,6 +5,7 @@ import random
 import pandas as pd
 import numpy as np
 
+
 def Neighbors(G, players):
     """
     Returns a list with the neighbors of a player. By neighbors
@@ -121,46 +122,45 @@ def tournament_results(G, seed, p, players, turns, edges, repetitions):
                          repetitions) # filename)
 
     # parameters
-    neighborhood = Neighbors(G, players)
+    neighborhood = Neighbors(G, results.players)
     nsize = Neighborhood_size(neighborhood)
     degree = list(G.degree(G.nodes()).values())
-    nscores = Neighbors_Scores(G, results, players)
-    normalised_nscore = Neighbors_Normalized_Scores(G, results, players)
+    nscores = Neighbors_Scores(G, results, results.players)
+    normalised_nscore = Neighbors_Normalized_Scores(G, results, results.players)
     normalised_av_nscore = Normalised_Average_Neighborhood_Score(G, results)
     av_nscores = Average_Neighborhood_Score(G, results)
     cliques = Cliques(G)
 
     # create data frame
-    data = pd.DataFrame({'players_list' :
-                          str([players for _ in results.players]),
+    data = pd.DataFrame({'players_list' : [results.players for _ in results.players],
                          'seed' : seed, 'parameter': p ,
                          'player_index' : G.nodes(),
-                         'player_name' : str(results.players),
+                         'player_name' : results.players,
                          'cooperating_ratio' : results.cooperating_rating,
                          'degree' : degree ,
-                         'neighbors' : str(neighborhood),
+                         'neighbors' : neighborhood,
                          'neighborhood_size' : nsize,
                          'ranking' : results.ranking,
-                         'scores' : str(results.scores),
+                         'scores' : results.scores,
                          'normalised_scores' :
-                          str(results.normalised_scores),
+                          results.normalised_scores,
                          'average_score' :
-                          [np.median(scores) for scores in results.normalised_scores],
-                         'neighbors_scores' : str(nscores),
+                         [np.median(scores) for scores in results.normalised_scores],
+                         'neighbors_scores' : nscores,
                          'normalised_neighbors_score' : normalised_nscore,
                          'normalised_average_neighboorhood_score' :
-                          normalised_av_nscore,
+                         normalised_av_nscore,
                          'R' :
-                          [list(results.game.RPST())[0] for _ in results.players],
+                         [list(results.game.RPST())[0] for _ in results.players],
                          'P' :
-                          [list(results.game.RPST())[1] for _ in results.players],
+                         [list(results.game.RPST())[1] for _ in results.players],
                          'S' :
-                          [list(results.game.RPST())[2] for _ in results.players],
+                         [list(results.game.RPST())[2] for _ in results.players],
                          'T' :
-                          [list(results.game.RPST())[3] for _ in results.players],
+                         [list(results.game.RPST())[3] for _ in results.players],
                          'connectivity' : nx.node_connectivity(G),
                          'clustering' : nx.average_clustering(G),
-                         'cliques' : str(cliques)
+                         'cliques' : cliques
                         })
 
     return data
