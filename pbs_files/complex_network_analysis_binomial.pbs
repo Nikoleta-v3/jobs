@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -q workq
+#PBS -N binomial_analysis
+#PBS -P PR350
+#PBS -o stdout.txt
+#PBS -e stderr.txt
+#PBS -l select=1:ncpus=16:mpiprocs=16
+#PBS -l place=scatter:excl
+#PBS -l walltime=70:00:00
+
+#PROJECT=PR350
+
+export MPLBACKEND="agg"
+# Run initial analysis on binomial experiment
+cd /home/c1569433/src/jobs/scripts
+~/anaconda3/bin/python  complex_networks_analysis.py /scratch/c1569433/data/binomial.h5 binomial
