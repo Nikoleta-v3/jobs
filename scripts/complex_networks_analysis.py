@@ -1,10 +1,13 @@
 import pandas as pd
 import numpy as np
+import matplotlib
+matplotlib.use("Agg")
 
+import matplotlib.pyplot as plt
 from sys import argv
 
-data = pd.read_hdf(argv[1])
-title = argv[2]
+data = pd.read_hdf("/home/nikoleta/src/jobs/data/ch4_experiment/watts_strogatz_sample.h5")
+title = 'small'
 
 # fixing index of the data
 data.index = range(len(data))
