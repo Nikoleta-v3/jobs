@@ -13,7 +13,7 @@ from data_structure import *
 # parameters
 turns = 200
 repetitions = 10
-ub_tournament_size = 50
+ub_tournament_size = 6
 ub_seed = 10
 num_sample_players = 10
 ub_parameter = 10
@@ -24,10 +24,10 @@ ordinary_players = [s() for s in axl.strategies]
 experiment = 'watts_strogatz'
 
 # where to export
-write_out = '/scratch/c1569433/data/{}.h5'.format(experiment)
+write_out = '/home/nikoleta/Desktop/error_{}.h5'.format(experiment)
 file_exists = os.path.isfile(write_out)
 
-results = pd.DataFrame()
+
 for tournament_size in range(2, ub_tournament_size):
     for initial_neighborhood_size in range(1, tournament_size):
 
@@ -55,9 +55,10 @@ for tournament_size in range(2, ub_tournament_size):
                                                                   reverse=True)]
 
                     if connections and 1 not in connections :
-
+                    # Some description of what is going on.
                             edges = G.edges()
-                            results = results.append([tournament_results(G,
+                                
+                            results = pd.DataFrame([tournament_results(G,
                                                         seed, p, players, turns,
                                                            edges, repetitions)])
                             results = results[cols]
