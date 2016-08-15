@@ -13,7 +13,7 @@ def Neighbors(G, players):
     """
     Neighbors = []
     for i in range(len(players)) :
-        Neighbors.append(tuple(players[j] for j in G.neighbors(i)))
+        Neighbors.append(G.neighbors(i))
     return Neighbors
 
 def Neighborhood_size (Neighborhood) :
@@ -95,7 +95,8 @@ def touranment(G, seed, players,
     # play the tournament. Return the results.
     return tournament.play(progress_bar=False)
 
-def tournament_results(G, seed, p, players, turns, edges, repetitions):
+def tournament_results(G, seed, p, players, turns, edges,
+                       repetitions, idn=0, initial_neighbourhood_size=2):
     """
     Creates a data frame with parameters of the tournament.
 
@@ -115,6 +116,8 @@ def tournament_results(G, seed, p, players, turns, edges, repetitions):
             A list with the player's neighbors index number
     neighborhood_size: integer
             The size of the neighborhood, should be eqaul with the degree
+    idn : int
+            The id of the tournament
 
     """
     # generate the tournament and the results
@@ -132,24 +135,18 @@ def tournament_results(G, seed, p, players, turns, edges, repetitions):
     cliques = Cliques(G)
 
     # create data frame
-    data = pd.DataFrame({'players_list' : [results.players for _ in results.players],
+    data = pd.DataFrame({'tournament_id' : [idn for _ in results.players],
                          'seed' : seed, 'parameter': p ,
                          'player_index' : G.nodes(),
                          'player_name' : results.players,
                          'cooperating_ratio' : results.cooperating_rating,
                          'degree' : degree ,
-                         'neighbors' : neighborhood,
+                         'neighbors' : compress_list_of_lists(neighborhood),
                          'neighborhood_size' : nsize,
                          'ranking' : results.ranking,
-                         'scores' : results.scores,
-                         'normalised_scores' :
-                          results.normalised_scores,
                          'average_score' :
                          [np.median(scores) for scores in results.normalised_scores],
-                         'neighbors_scores' : nscores,
-                         'normalised_neighbors_score' : normalised_nscore,
-                         'normalised_average_neighboorhood_score' :
-                         normalised_av_nscore,
+                         'average_neighborhood_score' : normalised_av_nscore,
                          'R' :
                          [list(results.game.RPST())[0] for _ in results.players],
                          'P' :
@@ -160,7 +157,12 @@ def tournament_results(G, seed, p, players, turns, edges, repetitions):
                          [list(results.game.RPST())[3] for _ in results.players],
                          'connectivity' : nx.node_connectivity(G),
                          'clustering' : nx.average_clustering(G),
-                         'cliques' : cliques
+                         'cliques' : compress_list_of_lists(cliques),
+                         'initial_neighbourhood_size': [initial_neighbourhood_size for _ in results.players],
                         })
 
     return data
+
+
+def compress_list_of_lists(lst):
+    return ["|".join([str(ele) for ele in l]) for l in lst]
