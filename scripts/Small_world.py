@@ -10,30 +10,21 @@ import numpy as np
 import os.path
 
 from functions import *
-from data_structure import *
 
 # parameters
-turns = 2
-repetitions = 3
-ub_tournament_size = 5
-ub_seed = 8
-num_sample_players = 6
-ub_parameter = 3
+turns = 200
+repetitions = 10
+ub_tournament_size = 50
+ub_seed = 10
+num_sample_players = 10
+ub_parameter = 10
 
 ordinary_players = [s() for s in axl.strategies]
 
 # titles
 experiment = 'watts_strogatz'
-
-# where to export
-write_out = '/Users/vince/Desktop/error_{}.h5'.format(experiment)
-file_exists = os.path.isfile(write_out)
-try:
-    os.remove(write_out)
-except FileNotFoundError:
-    pass
-
-hdf = pd.HDFStore('storage.h5')
+# create store
+hdf = pd.HDFStore('/scratch/c1569433/data/{}.h5'.format(experiment))
 
 tournament_id = 0
 for tournament_size in tqdm.tqdm(range(2, ub_tournament_size + 1)):
@@ -57,35 +48,26 @@ for tournament_size in tqdm.tqdm(range(2, ub_tournament_size + 1)):
                     # Define graph
                     G = nx.watts_strogatz_graph(len(players),
                                                 initial_neighborhood_size, p)
-                    # check for unconnected nodes
+                    # check for connected nodes
                     connections = [len(c) for c in
                                    sorted(nx.connected_components(G), key=len,
                                                                   reverse=True)]
 
                     if connections and (1 not in connections):
-                    # Some description of what is going on.
+                    # if connections is empty, or equal to 1, it means
+                    # at least on node is disconnected. Thus, skip this
+                    # tournament and generate next
                         edges = G.edges()
 
                         tournament_id += 1
-                        results = tournament_results(G,
-                                                    seed, p, players, turns,
-                                                       edges, repetitions,
-                                                     tournament_id,
-                                                     initial_neighborhood_size)
+                        results = tournament_results(G, seed, p, players, turns,
+                                                             edges, repetitions,
+                                                                  tournament_id,
+                                                      initial_neighborhood_size)
 
                         min_itemsize = {'player_name': 100,
                                         'neighbors': 200,
                                         'cliques': 200}
 
-                        hdf.append('d1', results, format='table', data_columns=True,
+                        hdf.append(experiment, results, format='table', data_columns=True,
                                    min_itemsize=min_itemsize)
-                        #results = results[cols]
-
-                        #if not file_exists:
-                            #results.to_hdf(write_out, '{}'.format(experiment),
-                                           #index=False,
-                                           #header=True)
-                        #else:
-                            #results.to_hdf(write_out, '{}'.format(experiment),
-                                           #mode='a', index=False,
-                                           #header=False)

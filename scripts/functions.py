@@ -6,54 +6,26 @@ import pandas as pd
 import numpy as np
 
 
-def Neighbors(G, players):
+def neighbors(G, players):
     """
     Returns a list with the neighbors of a player. By neighbors
     we mean the players a player interacts with.
     """
-    Neighbors = []
+    neighbors = []
     for i in range(len(players)) :
-        Neighbors.append(G.neighbors(i))
-    return Neighbors
+        neighbors.append(G.neighbors(i))
+    return neighbors
 
-def Neighborhood_size (Neighborhood) :
+def neighborhood_size (Neighborhood) :
     """
     Returns the size of the neighborhood of a player.
     """
-    Neighborhood_size = []
+    neighborhood_size = []
     for i in range(len(Neighborhood)) :
-        Neighborhood_size.append(len(Neighborhood[i]))
-    return Neighborhood_size
+        neighborhood_size.append(len(Neighborhood[i]))
+    return neighborhood_size
 
-def Neighbors_Scores(G, results, players):
-    """
-    Returns a list with the scores of the
-    neighbors.
-    """
-    return [[results.scores[j] for j in G.neighbors(i)]
-            for i, pl in enumerate(players)]
-
-def Neighbors_Normalized_Scores(G, results, players):
-    """
-    Returns a list with the normalized scores of the
-    neighbors.
-    """
-    return [[results.normalised_scores[j] for j in G.neighbors(i)]
-            for i, pl in enumerate(players)]
-
-def Average_Neighborhood_Score(G, results) :
-    """
-    Returns the average score of the sum of the neighbors
-    scores. Thus, the average score of the neighborhood.
-    """
-    av_score = []
-    temp = [[j for m in G.neighbors(k)
-             for j in results.scores[m]] for k in G.nodes()]
-    for i in G.nodes() :
-        av_score.append(np.mean(temp[i]))
-    return av_score
-
-def Normalised_Average_Neighborhood_Score(G, results):
+def normalised_average_neighborhood_score(G, results):
     """
     Returns the average score of the sum of the neighbors
     scores. Thus, the average score of the neighborhood.
@@ -75,7 +47,13 @@ def Cliques(G) :
         cliques.append(nx.cliques_containing_node(G, i))
     return cliques
 
-def touranment(G, seed, players,
+def compress_list_of_lists(lst):
+    """
+    Returns a compressed list of lists
+    """
+    return ["|".join([str(ele) for ele in l]) for l in lst]
+
+def tournament(G, seed, players,
                turns, edges, repetitions): # filename)
     """
     Run a spatial tournament with a topology of any given
@@ -93,7 +71,7 @@ def touranment(G, seed, players,
                                        repetitions= repetitions)
 
     # play the tournament. Return the results.
-    return tournament.play(progress_bar=False)
+    return tournament.play(progress_bar='/scratch/c1569433/data/{}.h5')
 
 def tournament_results(G, seed, p, players, turns, edges,
                        repetitions, idn=0, initial_neighbourhood_size=2):
@@ -102,36 +80,55 @@ def tournament_results(G, seed, p, players, turns, edges,
 
     Parameters
     ----------
-    players_list : list
-            A list with the players participating in the tournament
+    tournament_id: integer
+            A number representing the index number of a tournament
     seed : integer
             A seed for the tournament and graph
     player_index : integer
             A players index number
     player_name : character
             The name of the player
+    cooperating_ratio : float
+            A float number representing the cooperating ratio of the strategy
+            for a specific tournament
     degree : integer
-            THe degree of the graph
+            The degree of the graph
     neighbors : list
             A list with the player's neighbors index number
     neighborhood_size: integer
-            The size of the neighborhood, should be eqaul with the degree
-    idn : int
-            The id of the tournament
-
+            The size of the neighborhood, should be equal with the degree
+    ranking : integer
+            The rank of the player
+    average_score : float
+            The average score achieved by each strategy
+    average_neighborhood_score : float
+            The average score of the neighbors scores#
+    R : integer
+            Reward payoff
+    P : integer
+            Punishment payoff
+    T : integer
+            Temptation payoff
+    S : integer
+            Suckers payoff
+    connectivity : integer
+            Node connectivity of the graph
+    clustering : float
+            Clustering coefficient for nodes.
+    cliques : list
+            Cliques that exist in the graph
+    initial_neighbourhood_size : integer
+            Initial number of neighbors
     """
     # generate the tournament and the results
-    results = touranment(G, seed, players, turns, edges,
-                         repetitions) # filename)
+    results = tournament(G, seed, players, turns, edges,
+                         repetitions)
 
     # parameters
-    neighborhood = Neighbors(G, results.players)
-    nsize = Neighborhood_size(neighborhood)
+    neighborhood = neighbors(G, results.players)
+    nsize = neighborhood_size(neighborhood)
     degree = list(G.degree(G.nodes()).values())
-    nscores = Neighbors_Scores(G, results, results.players)
-    normalised_nscore = Neighbors_Normalized_Scores(G, results, results.players)
-    normalised_av_nscore = Normalised_Average_Neighborhood_Score(G, results)
-    av_nscores = Average_Neighborhood_Score(G, results)
+    normalised_av_nscore = normalised_average_neighborhood_score(G, results)
     cliques = Cliques(G)
 
     # create data frame
@@ -162,7 +159,3 @@ def tournament_results(G, seed, p, players, turns, edges,
                         })
 
     return data
-
-
-def compress_list_of_lists(lst):
-    return ["|".join([str(ele) for ele in l]) for l in lst]
