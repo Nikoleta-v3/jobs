@@ -13,7 +13,7 @@ from functions import *
 
 # parameters
 turns = 200
-repetitions = 11
+repetitions = 10
 ub_tournament_size = 50
 ub_seed = 10
 num_sample_players = 10
