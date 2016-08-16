@@ -154,7 +154,6 @@ def tournament_results(G, seed, p, players, turns, edges,
                          [list(results.game.RPST())[3] for _ in results.players],
                          'connectivity' : nx.node_connectivity(G),
                          'clustering' : nx.average_clustering(G),
-                         'cliques' : compress_list_of_lists(cliques),
                          'initial_neighbourhood_size': [initial_neighbourhood_size for _ in results.players],
                         })
 
