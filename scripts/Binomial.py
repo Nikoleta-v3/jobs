@@ -13,7 +13,7 @@ from functions import *
 
 # parameters
 turns = 200
-repetitions = 10
+repetitions = 11
 ub_tournament_size = 50
 ub_seed = 10
 num_sample_players = 10
@@ -63,9 +63,7 @@ for tournament_size in tqdm.tqdm(range(2, ub_tournament_size + 1)):
                                                                   tournament_id,
                                                                               0)
 
-                        min_itemsize = {'player_name': 100,
-                                        'neighbors': 200,
-                                        'cliques': 200}
+                        min_itemsize = {'player_name': 100, 'neighbors': 200}
 
                         hdf.append(experiment, results, format='table', data_columns=True,
                                    min_itemsize=min_itemsize)

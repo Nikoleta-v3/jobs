@@ -45,7 +45,7 @@ for tournament_size in tqdm.tqdm(range(2, ub_tournament_size + 1)):
         results = tournament_results(G, tournament_size, num_sample_players,
                                              players, turns, edges, repetitions)
 
-        min_itemsize = {'player_name': 100, 'neighbors': 200, 'cliques': 200}
+        min_itemsize = {'player_name': 100, 'neighbors': 200}
 
         hdf.append(experiment, results, format='table', data_columns=True,
                                                       min_itemsize=min_itemsize)
