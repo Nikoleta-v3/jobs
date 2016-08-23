@@ -43,7 +43,8 @@ for tournament_size in tqdm.tqdm(range(2, ub_tournament_size + 1)):
         edges = G.edges()
         tournament_id += 1
         results = tournament_results(G, tournament_size, num_sample_players,
-                                             players, turns, edges, repetitions)
+                                             players, turns, edges, repetitions,
+                                                               tournament_id, 0)
 
         min_itemsize = {'player_name': 100, 'neighbors': 200}
 
