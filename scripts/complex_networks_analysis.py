@@ -1,4 +1,5 @@
 import pandas as pd
+import networkx as nx
 import numpy as np
 import matplotlib
 matplotlib.use("Agg")
@@ -6,36 +7,22 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from sys import argv
 
-data = pd.read_hdf("/home/nikoleta/src/jobs/data/ch4_experiment/watts_strogatz_sample.h5")
-title = 'small'
+data = pd.read_hdf(argv[1])
+title = argv[2]
 
 # fixing index of the data
 data.index = range(len(data))
 
-# fixing the players list
-players_list= []
-for i in range(len(data)) :
-    x = data.players_list[i][2:].split("],")
-    players_list.append(x[0])
-data['players_list'] = players_list
-
-# fixing the players name
-player_name = []
-for i in range(len(data)):
-    x = data.players_list[i].split(", ")
-    player_name.append(x[data.player_index[i]])
-data.player_name = player_name
-
-# count tournaments
-tournament = []
-count = 0
-for i in range(len(data)):
-    if data.ranking[i] == 0 :
-        count = count +1
-    else : count = count
-
-    tournament.append(count)
-data['number_of_tournaments'] = tournament
+# only for complete
+if argv[2] == 'round_robin':
+    # for round robin we do not need parameter
+    data.drop('parameter', axis=1, inplace=True)
+    # and seed for the rr is the tournament size
+    data['tournament_size'] = data.seed
+    data.drop('seed', axis=1, inplace=True)
+else :
+    # tournament size for the rest
+    data['tournament_size']=data.groupby('tournament_id')['player_name'].transform('count').values
 
 # frequency
 data['frequency'] = data.groupby('player_name')['player_name'].transform('count')
@@ -54,26 +41,32 @@ data['ratio'] = data.wins/data.frequency
 # normalized average score
 data['normalized_average_score'] = data.average_score/data.frequency
 
-# crosstab of players and cooperating ratio
-cooperation = pd.crosstab(data.player_name, data.cooperating_ratio)
+# cliques by re - creating manually the graph
+cliques = []
+for i in data.tournament_id.unique() :
+    # get the nodes
+    players = data.tournament_size[data.tournament_id==i].values[0]
+    G = nx.Graph()
+    G.add_nodes_from(range(players))
 
-# classification based on cooperating ratio
-classification = []
-for i in range(len(data)):
-    if data.cooperating_ratio[i] <= 0.2 :
-        classification.append('low')
-    if data.cooperating_ratio[i] > 0.2 and data.cooperating_ratio[i] <= 0.4 :
-         classification.append('weak')
-    if data.cooperating_ratio[i] > 0.4 and data.cooperating_ratio[i] <= 0.6 :
-         classification.append('mid')
-    if data.cooperating_ratio[i] > 0.6 and data.cooperating_ratio[i] <= 0.8 :
-         classification.append('moderate')
-    if data.cooperating_ratio[i] > 0.8 and data.cooperating_ratio[i] <= 1 :
-         classification.append('high')
-data['classification'] = classification
+    # get the edges
+    edges = []
+    for j in data.index[data.tournament_id==i]:
+        neighbors = data.neighbors[data.tournament_id==i][j].split("|")
+        neighbors = map(int, neighbors)
+        edges.append([tuple((data.player_index[data.tournament_id==i][j], k)) for k in neighbors])
+    edges = sum(edges, [])
+    G.add_edges_from(edges)
 
-summary = data.describe()
+    # get the cliques
+    nx.find_cliques(G)
+    for z in G.nodes() :
+        cliques.append(nx.cliques_containing_node(G, z))
+# pass it as column
+data['cliques'] = cliques
+
+# cliques number
+data['num_cliques'] = data.cliques.map(len)
 
 # output what we want
-data.to_hdf("/scratch/c1569433/data/ratio-{}.h5".format(title), title)
-summary.to_csv("/scratch/c1569433/data/summary-{}.csv".format(title))
+data.to_hdf("/home/nikoleta/src/jobs/data/After-{}.h5".format(title), title)
