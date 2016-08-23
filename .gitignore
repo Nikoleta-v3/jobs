@@ -5,3 +5,4 @@ __pycache__/*
 scripts/test/*
  scripts/__pycache__/*
  2xsizesx3xtopologies.ipynb
+notebooks/.ipynb_checkpoints/*
