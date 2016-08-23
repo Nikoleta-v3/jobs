@@ -14,13 +14,16 @@ ub_tournament_size = 50
 ub_seed = 10
 num_sample_players = 10
 ub_parameter = 10
+ordinary_players = [s() for s in axl.strategies]
 
 # titles
-experiment = 'binomial_cliques'
+experiment = 'binomial'
 # create store
-hdf = pd.HDFStore('/home/nikoleta/Desktop/{}.h5'.format(experiment))
+write_out = '/scratch/c1569433/data/graphs-{}.csv'.format(experiment)
+file_exists = os.path.isfile(write_out)
 
 tournament_id = 0
+results = pd.DataFrame()
 for tournament_size in tqdm.tqdm(range(2, ub_tournament_size + 1)):
 
         # set seed
@@ -50,9 +53,10 @@ for tournament_size in tqdm.tqdm(range(2, ub_tournament_size + 1)):
                     # at least on node is disconnected. Thus, skip this
                     # tournament and generate next
 
-                        nx.find_cliques(G)
-                        cliques = []
-                        for i in G.nodes() :
-                            cliques.append(nx.cliques_containing_node(G, i))
+                        graphs = [G.nodes(), G.edges()]
+                        results = results.append([graphs])
 
-                        hdf.append(experiment, cliques, format='table', data_columns=True)
+                        if not file_exists:
+                            results.to_csv(write_out, index=False, header=True)
+                        else :
+                            results.to_csv(write_out, mode='a',  index=False, header=False)
